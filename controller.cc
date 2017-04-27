@@ -28,7 +28,7 @@ unsigned int Controller::window_size( void )
 
   if ( debug_ ) {
     cerr << "At time " << timestamp_ms()
-	 << " window size is " << the_window_size << endl;
+   << " window size is " << the_window_size << endl;
   }
 
   return the_window_size;
@@ -36,8 +36,8 @@ unsigned int Controller::window_size( void )
 
 /* A datagram was sent */
 void Controller::datagram_was_sent( const uint64_t sequence_number,
-				    /* of the sent datagram */
-				    const uint64_t send_timestamp )
+            /* of the sent datagram */
+            const uint64_t send_timestamp )
                                     /* in milliseconds */
 {
   if(last_send == 0) {
@@ -46,30 +46,27 @@ void Controller::datagram_was_sent( const uint64_t sequence_number,
     delta_send = send_timestamp - last_send;
     last_send = send_timestamp;
   }
-  
+
   if ( debug_ ) {
     cerr << "At time " << send_timestamp
-	 << " sent datagram " << sequence_number << endl;
+   << " sent datagram " << sequence_number << endl;
   }
 }
 
 /* An ack was received */
 void Controller::ack_received( const uint64_t sequence_number_acked,
-			       /* what sequence number was acknowledged */
-			       const uint64_t send_timestamp_acked,
-			       /* when the acknowledged datagram was sent (sender's clock) */
-			       const uint64_t recv_timestamp_acked,
-			       /* when the acknowledged datagram was received (receiver's clock)*/
-			       const uint64_t timestamp_ack_received )
+             /* what sequence number was acknowledged */
+             const uint64_t send_timestamp_acked,
+             /* when the acknowledged datagram was sent (sender's clock) */
+             const uint64_t recv_timestamp_acked,
+             /* when the acknowledged datagram was received (receiver's clock)*/
+             const uint64_t timestamp_ack_received )
                                /* when the ack was received (by sender) */
 {
-
-  //uint64_t delta_receive = 0;
 
   if(last_receive == 0) {
     last_receive = timestamp_ack_received;
   } else {
-    //delta_receive = timestamp_ack_received - last_receive;
     last_receive = timestamp_ack_received;
   }
 
@@ -96,13 +93,12 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
   }
 
   uint64_t upper_thresh = min_rtt * 1.3;
-  //uint64_t lower_thresh = min_rtt * 1.2;
 
   cerr << "Min RTT: " << min_rtt << endl;
 
   if(packet_rtt > upper_thresh) {
     if(cwnd > min_rtt * 1.1) {
-      cwnd *= 0.90;
+      cwnd *= 0.99;
     } else if(cwnd > 5) {
       cwnd--;
     } else {
